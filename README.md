@@ -11,9 +11,11 @@ $ markdown2pdf.sh  your-markdown-file  --output output.pdf
 ~~~~
 
 The "--output" option is optional. For example,
+
 ~~~~sh
 $ markdown2pdf.sh  README.md
 ~~~~
+
 will generate README.pdf from READMD.md.
 
 # Option #
