@@ -14,17 +14,25 @@ usage(){
       Filename for output pdf file
 
 
-  -g, --geometry MODE
-      Page layout. Supported MODEs are  "tight", "normal". (default: tight)
+  -g, --geometry GEOMETRY
+      Page geometry. Supported GEOMETRYs are "tight", "normal". (default "tight")
+
+
+  --layout LAYOUT
+       Page layout. Supported LAYOUTs are:
+         - "2x1" (two-up, side-by-side)
+         - "1x2"
+         - "normal" (default)
 
   -2
-      2-up side-by-side layout
+      alias of --layout 2x1 (2-up side-by-side layout)
 
-  --highlightstyle STYLE
+  --highlight-style STYLE
       Style of syntax highlight. Supported STYLEs are "tango", "haddock", "kate", etc. a
       See pandoc's manual for details.
 
-
+  --config FILENAME
+      Filename for configration. (default: ~/.markdown2pdf)
 EOF
     exit 1
 }
@@ -38,17 +46,50 @@ unset INPUT
 NumPerPage=1
 highlightstyle="tango"
 geometry="tight"
+layout="normal"
 
-[ -f ~/.markdown2pdf ] && source ~/.markdown2pdf
+configfile=${HOME}/.markdown2pdf
 
+# Save command-line args
+CMDARGS="$@"
+
+# Parse command-line (1st stage)
 while [ $# -ne 0 ]; do
     case "$1" in
+	--config)
+	    configfile="$2"
+	    [ -f "$configfile" ] || error "No such config file, $configfile"
+	    shift
+	    ;;
+    esac
+    shift
+done
+
+[ -f "$configfile" ] && source "$configfile"
+
+
+# Parse command-line (2nd stage)
+# Restore command-line args
+set -- $CMDARGS
+while [ $# -ne 0 ]; do
+    case "$1" in
+	--config)
+	    shift
+	    ;;
 	-o|--output)
 	    OUTPUT="$2"
 	    shift
 	    ;;
+	-g|--geometry)
+	    geometry="$2"
+	    shift
+	    ;;
+	--layout)
+	    layout="$2"
+	    shift
+	    ;;
 	-2)
-	    NumPerPage=2
+	    layout="2x1"
 	    ;;
 	--highlight-style)
 	    highlightstyle="$2"
@@ -68,9 +109,13 @@ while [ $# -ne 0 ]; do
     shift
 done
 
+
 [ -n "$INPUT" ] || usage
 if [ -z "$OUTPUT" ]; then
-    OUTPUT=$1.pdf
+    tmp=${INPUT/.txt/}
+    tmp=${tmp/.md/}
+    OUTPUT=${tmp}.pdf
+    unset tmp
 fi
 
 
@@ -151,11 +196,14 @@ pandoc -f markdown \
        $OPTS \
        -o $TMPFILE $INPUT
 
-case "$NumPerPage" in
-    2)
+case "$layout" in
+    2x1)
 	pdfjam --nup 2x1 --landscape $TMPFILE  --outfile $OUTPUT
 	;;
-    1)
+    1x2)
+	pdfjam --nup 1x2 $TMPFILE  --outfile $OUTPUT
+	;;
+    normal)
 	cp $TMPFILE $OUTPUT
 	;;
     *)
@@ -166,4 +214,7 @@ esac
 rm $TMPFILE
 rm $TMPFILTER
 
+echo
+echo
+echo "Finished. Output was writtern to '$OUTPUT'."
 exit 0
