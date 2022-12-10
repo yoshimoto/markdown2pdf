@@ -35,7 +35,7 @@ $ markdown2pdf.sh --help
   --layout LAYOUT
 	  Page layout. Supported LAYOUTs are
 	    - "2x1" (two-up, side-by side)
-		- "normal"
+	    - "normal"
 	  default is "normal"
 
   -2
