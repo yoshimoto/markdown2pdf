@@ -88,8 +88,8 @@ See pandoc’s manual for details.
 
 markdown2pdf.sh is just wrapping the following command line utilities:
 
-	- pandoc
-	- lulatex
-	- pdfjam
+ - pandoc
+ - lulatex
+ - pdfjam
 
 If you have any issues, please make sure first that the above utilities are installed and configured correctly.
