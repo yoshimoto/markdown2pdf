@@ -16,7 +16,11 @@ The "--output" option is optional. For example,
 $ markdown2pdf.sh  README.md
 ~~~~
 
-will generate README.pdf from READMD.md.
+will generate README.pdf from README.md.
+
+# Example
+
+The generated pdf is avaiable at https://github.com/yoshimoto/markdown2pdf/blob/main/README.pdf.
 
 # Option #
 
