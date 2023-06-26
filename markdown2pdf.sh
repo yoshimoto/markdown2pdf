@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 set -e
 
 msg(){ echo "$@" > /dev/stderr; }
@@ -119,6 +118,8 @@ if [ -z "$OUTPUT" ]; then
 fi
 
 
+set +e
+
 REQS="pandoc"
 for exe in $REQS; do
     type $exe > /dev/null 2>&1
@@ -146,6 +147,7 @@ for exe in $REQS; do
     fi
 done
 
+set -e
 
 TMPDIR=${TMPDIR=/tmp}
 
