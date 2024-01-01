@@ -31,6 +31,9 @@ usage(){
       Style of syntax highlight. Supported STYLEs are "tango", "haddock", "kate", etc. a
       See pandoc's manual for details.
 
+  --toc
+      Generate table of content
+
   --config FILENAME
       Filename for configration. (default: ~/.markdown2pdf)
 EOF
@@ -47,6 +50,7 @@ NumPerPage=1
 highlightstyle="tango"
 geometry="tight"
 layout="normal"
+unset enabletoc
 
 configfile=${HOME}/.markdown2pdf
 
@@ -97,6 +101,9 @@ while [ $# -ne 0 ]; do
 	    ;;
 	--help|-h)
 	    usage
+	    ;;
+	--toc)
+	    enabletoc=1
 	    ;;
 	-*)
 	    usage "Error; bad option '$1' detected"
@@ -173,6 +180,12 @@ EOF
 OPTS=""
 if [ -n "$luatexjapresetoptions" ]; then
     OPTS+=" -V luatexjapresetoptions=$luatexjapresetoptions"
+fi
+
+OPTS+=" -V colorlinks=true -V linkcolor=blue  -V urlcolor=red -V toccolor=gray "
+
+if [ -n "$enabletoc" ]; then
+    OPTS+=" --table-of-contents "
 fi
 
 case "$geometry" in
