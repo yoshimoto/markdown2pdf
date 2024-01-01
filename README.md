@@ -50,6 +50,9 @@ $ markdown2pdf.sh --help
   --highlightstyle STYLE
       Style of syntax highlight. Supported STYLEs are "tango", "haddock", "kate", etc.
 	  See pandoc's manual for details.
+
+  --toc
+      Generate table of content
 ~~~~
 
 # Configuration file #
